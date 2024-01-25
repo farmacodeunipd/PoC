@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=mydatabase
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypassword
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d"
+    ports:
+      - "3306:3306"
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin:latest
+
+  #   environment:
+  #     - PMA_HOST=localhost
+  #     - PMA_PORT=3306
+  #   ports:
+  #     - "8080:80"
+  
+  php-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.api
+    ports:
+      - "8082:80"
+
+  react-app:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.client
+    ports:
+      - "3000:3000"
+
+  python-api:
+    build:
+      context: ./algo
+      dockerfile: Dockerfile.python
+    ports:
+      - "4000:4000"
+

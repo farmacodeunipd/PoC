@@ -17,7 +17,7 @@ function SearchView() {
     async function fetchResults(object, id, n) {
         setLoading(true);
         const response = await axios.get(
-            `http://localhost:5000/search/${object}/${id}/${n}`
+            `http://localhost:4000/search/${object}/${id}/${n}`
         );
         console.log("Risposta:", response.data);
         setResults(response.data);
@@ -30,7 +30,7 @@ function SearchView() {
     }, []);
 
     async function getUsers() {
-        const response = await axios.get("http://localhost/api/users");
+        const response = await axios.get("http://localhost:8082/api/users");
         setUsers(response.data);
     }
 
@@ -40,7 +40,7 @@ function SearchView() {
     }, []);
 
     async function getItems() {
-        const response = await axios.get("http://localhost/api/items");
+        const response = await axios.get("http://localhost:8082/api/items");
         setItems(response.data);
     }
 

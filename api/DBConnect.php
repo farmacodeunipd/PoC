@@ -1,9 +1,10 @@
 <?php
 	class DBConnect {
-		private const HOST_DB = "localhost";
-		private const DATABASE_NAME = "farmacode";
-		private const USERNAME = "root";
-		private const PASSWORD = "";
+		private const HOST_DB = "db";
+		private const DATABASE_NAME = "mydatabase";
+		private const USERNAME = "myuser";
+		private const PASSWORD = "mypassword";
+		private const PORT = "3306";
 
 		private $connection;
 
@@ -13,7 +14,8 @@
 				self::HOST_DB,
 				self::USERNAME,
 				self::PASSWORD,
-				self::DATABASE_NAME
+				self::DATABASE_NAME,
+				self::PORT
 			);
 			if (!mysqli_connect_errno()) {
 				return true;

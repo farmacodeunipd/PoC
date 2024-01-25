@@ -5,7 +5,7 @@ from ai_classes import Model, FileInfo
 app = Flask(__name__)
 CORS(app)
 
-model = Model(file_info = FileInfo(model_file = 'trained_model.pkl', file_path = "output_file.csv", column_1 = 'cod_cli', column_2 = 'cod_art', column_3 = 'qta_ordinata'))
+model = Model(file_info=FileInfo(model_file='trained_model.pkl', file_path="output_file.csv", column_1='cod_cli', column_2='cod_art', column_3='qta_ordinata'))
 model.train_model()
 
 # Endpoint per la comunicazione con l'algoritmo
@@ -27,6 +27,6 @@ def search_endpoint(object, id, n):
         # Gestire eventuali errori
         return jsonify({'error': str(e)}), 500
 
-# Avviare il server Flask
+# Avviare il server Flask su tutte le interfacce su porta 4000
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=4000)

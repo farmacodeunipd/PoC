@@ -1,0 +1,23 @@
+# Use an image with Apache and PHP support
+FROM php:apache
+
+# Set the working directory in the container
+WORKDIR /var/www/html
+
+# Enable mod_rewrite
+RUN a2enmod rewrite
+
+# Copy the contents of the API directory to the container
+COPY . .
+
+# Adjust permissions for files and directories
+RUN chown -R www-data:www-data .
+
+# Install required PHP extensions
+RUN docker-php-ext-install mysqli
+
+# Expose port 80 for Apache
+EXPOSE 80
+
+# Use the default Apache start command
+CMD ["apache2-foreground"]

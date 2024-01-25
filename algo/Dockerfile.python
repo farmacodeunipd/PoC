@@ -1,0 +1,20 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y build-essential
+
+# Install Flask, Flask-CORS, pandas, and scikit-surprise
+RUN pip install --no-cache-dir flask flask-cors pandas scikit-surprise
+
+# Copy the application code into the container
+COPY . .
+
+# Expose port 3001 for the Flask application
+EXPOSE 4000
+
+# Run the Flask application
+CMD ["python", "app.py"]
