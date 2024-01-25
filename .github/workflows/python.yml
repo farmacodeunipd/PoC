@@ -3,7 +3,7 @@ name: Python application
 on:
   push:
     paths:
-      - '**.py'
+      - '**/**.py'
 
 jobs:
   build:
