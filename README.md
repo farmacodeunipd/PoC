@@ -14,7 +14,7 @@ inizierà a creare le immagini del container e ad avviarle
 
 ## Accedere al sito
 
-Se si vuole visitare e utilizzare l'applicazione dirigersi a questo indirizzo [localhost:3000](localhost:3000) con il conteiner avviato.
+Se si vuole visitare e utilizzare l'applicazione dirigersi a questo indirizzo [localhost:3000](https://localhost:3000) con il conteiner avviato.
 
 Per sapere come usare e intergire con l'applicazione, fare riferimento al manuale utente "Guida_Utente.pdf" presente nella cartella di progetto.
 
