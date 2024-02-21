@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
@@ -76,6 +77,7 @@ function connectToDB() {
 async function startServer() {
     try {
         const connection = await connectToDB();
+        app.use(cors());
         app.use(express.json());
 
         app.get("/", (req, res) => {
@@ -84,7 +86,7 @@ async function startServer() {
 
         app.get("/users", (req, res) => {
             connection.query(
-                "SELECT cod_cli, rag_soc FROM anacli LIMIT 100",
+                "SELECT cod_cli, rag_soc FROM anacli LIMIT 500",
                 (error, results, fields) => {
                     if (error) {
                         console.error(
@@ -96,6 +98,79 @@ async function startServer() {
                         });
                     } else {
                         res.json(results);
+                    }
+                }
+            );
+        });
+
+        app.get("/users/:id", (req, res) => {
+            const userID = req.params.id;
+            connection.query(
+                "SELECT cod_cli, rag_soc FROM anacli WHERE cod_cli = ?",
+                [userID],
+                (error, results, fields) => {
+                    if (error) {
+                        console.error(
+                            "Errore durante il recupero dei dati dalla tabella clienti:",
+                            error
+                        );
+                        res.status(500).json({
+                            error: "Errore durante il recupero dei dati dalla tabella clienti",
+                        });
+                    } else {
+                        if (results.length === 0) {
+                            res.status(404).json({
+                                error: "User non trovato",
+                            });
+                        } else {
+                            res.json([results[0]]);
+                        }
+                    }
+                }
+            );
+        });
+
+        app.get("/items", (req, res) => {
+            connection.query(
+                "SELECT cod_art, des_art FROM anaart LIMIT 500",
+                (error, results, fields) => {
+                    if (error) {
+                        console.error(
+                            "Errore durante il recupero dei dati dalla tabella prodotti:",
+                            error
+                        );
+                        res.status(500).json({
+                            error: "Errore durante il recupero dei dati dalla tabella prodotti",
+                        });
+                    } else {
+                        res.json(results);
+                    }
+                }
+            );
+        });
+
+        app.get("/items/:id", (req, res) => {
+            const itemID = req.params.id;
+            connection.query(
+                "SELECT cod_art, des_art FROM anaart WHERE cod_art = ?",
+                [itemID],
+                (error, results, fields) => {
+                    if (error) {
+                        console.error(
+                            "Errore durante il recupero dei dati dalla tabella prodotti:",
+                            error
+                        );
+                        res.status(500).json({
+                            error: "Errore durante il recupero dei dati dalla tabella prodotti",
+                        });
+                    } else {
+                        if (results.length === 0) {
+                            res.status(404).json({
+                                error: "Item non trovato",
+                            });
+                        } else {
+                            res.json([results[0]]);
+                        }
                     }
                 }
             );

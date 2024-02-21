@@ -30,7 +30,7 @@ function SearchView() {
     }, []);
 
     async function getUsers() {
-        const response = await axios.get("http://localhost:8082/api/users");
+        const response = await axios.get("http://localhost:5000/users");
         setUsers(response.data);
     }
 
@@ -40,7 +40,7 @@ function SearchView() {
     }, []);
 
     async function getItems() {
-        const response = await axios.get("http://localhost:8082/api/items");
+        const response = await axios.get("http://localhost:5000/items");
         setItems(response.data);
     }
 
