@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-./express/node_modules
 /.pnp
 .pnp.js
 
@@ -24,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 /src/__pycache__
+/algo/__pycache__
+/algo/.pytest_cache
+/express/node_modules
