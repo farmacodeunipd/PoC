@@ -7,12 +7,12 @@ function classNames(...classes) {
 }
 
 async function getUser(id) {
-    const response = await axios.get(`http://localhost:5000/users/${id}`);
+    const response = await axios.get(`http://localhost:3080/users/${id}`);
     return response.data[0].rag_soc;
 }
 
 async function getItem(id) {
-    const response = await axios.get(`http://localhost:5000/items/${id}`);
+    const response = await axios.get(`http://localhost:3080/items/${id}`);
     return response.data[0].des_art;
 }
 

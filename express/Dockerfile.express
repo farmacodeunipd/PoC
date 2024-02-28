@@ -23,7 +23,7 @@ RUN npm install
 COPY . .
 
 # Expose the port on which the app will run (adjust if needed)
-EXPOSE 5000
+EXPOSE 3080
 
 # Command to run the application
 CMD ["./wait-for-it.sh", "-t", "30", "db:3306", "--", "node", "app.js"]

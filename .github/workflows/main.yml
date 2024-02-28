@@ -22,7 +22,7 @@ jobs:
 
       - name: Run MySQL tests
         run: |
-          docker-compose run --rm db pytest /path/to/test_mysql.py
+          docker-compose run --rm db pytest /test/db.py
 
       - name: Run React App tests
         run: |
@@ -30,7 +30,7 @@ jobs:
 
       - name: Run Python API tests
         run: |
-          docker-compose run --rm python-api pytest /path/to/test_python_api.py
+          docker-compose run --rm python-api pytest /test/algo.py
 
       - name: Run Express API tests
         run: |

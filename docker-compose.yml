@@ -43,7 +43,7 @@ services:
             context: ./express
             dockerfile: Dockerfile.express
         ports:
-            - "5000:5000"
+            - "3080:3080"
 
     # phpmyadmin:
     #     image: phpmyadmin/phpmyadmin:latest
