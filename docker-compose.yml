@@ -1,62 +1,41 @@
-version: "3.8"
+name: Run Tests
 
-services:
-    db:
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    services:
+      db:
         image: mysql:latest
-        command: mysqld --default-authentication-plugin=mysql_native_password
-        restart: always
-        environment:
-            #- MYSQL_AUTHENTICATION_PLUGIN=mysql_native_password
-            #- MYSQL_ALLOW_EMPTY_PASSWORD=ok
-            - MYSQL_ROOT_HOST=localhost
-            - MYSQL_HOST=*
-            - MYSQL_ROOT_PASSWORD=password
-            - MYSQL_DATABASE=mydatabase
-            - MYSQL_USER=myuser
-            - MYSQL_PASSWORD=mypassword
-            - MYSQL_TCP_PORT=3306
-        volumes:
-            - "./db:/docker-entrypoint-initdb.d"
-        expose:
-            - 3306
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: mydatabase
+          MYSQL_USER: myuser
+          MYSQL_PASSWORD: mypassword
         ports:
-            - "3306:3306"
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-    react-app:
-        build:
-            context: ./client
-            dockerfile: Dockerfile.client
-        ports:
-            - "3000:3000"
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    python-api:
-        build:
-            context: ./algo
-            dockerfile: Dockerfile.python
-        ports:
-            - "4000:4000"
+      - name: Build and run Docker Compose
+        run: docker-compose up -d
 
-    express:
-        depends_on:
-            - db
-        build:
-            context: ./express
-            dockerfile: Dockerfile.express
-        ports:
-            - "3080:3080"
+      - name: Wait for services to start
+        run: sleep 30s
 
-    # phpmyadmin:
-    #     image: phpmyadmin/phpmyadmin:latest
+      - name: Run Python API Tests
+        run: |
+          docker-compose exec python-api pytest /tests
+          # Replace '/path/to/tests/directory' with the actual path to your tests directory within the container
 
-    #     environment:
-    #         - PMA_HOST=db
-    #         - PMA_PORT=3306
-    #     ports:
-    #         - "8080:80"
-
-    # php-api:
-    #     build:
-    #         context: ./api
-    #         dockerfile: Dockerfile.api
-    #     ports:
-    #         - "8082:80"
+      - name: Tear down services
+        run: docker-compose down

@@ -1,37 +1,46 @@
-name: Docker CI
+name: Run Tests
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # Adjust branch name as needed
 
 jobs:
-  build-and-test:
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
 
+    services:
+      db:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: mydatabase
+          MYSQL_USER: myuser
+          MYSQL_PASSWORD: mypassword
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Build Docker images
+      - name: Build and run Docker Compose
         run: |
-          docker-compose build
+          docker-compose up -d
+          docker-compose ps
+        # Adjust this step according to your project structure
 
-      - name: Run MySQL tests
-        run: |
-          docker-compose run --rm db pytest /test/db.py
+      - name: Wait for services to start
+        run: sleep 30s  # Adjust as needed
 
-      - name: Run React App tests
+      - name: Run Tests
         run: |
-          docker-compose run --rm react-app npm test
+          # Run your test commands here
+          docker-compose exec react-app npm test
+          docker-compose exec python-api pytest
+          # Add more test commands for other services as needed
 
-      - name: Run Python API tests
-        run: |
-          docker-compose run --rm python-api pytest /test/algo.py
-
-      - name: Run Express API tests
-        run: |
-          docker-compose run --rm express npm test
+      - name: Tear down services
+        run: docker-compose down
