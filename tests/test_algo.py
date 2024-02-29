@@ -15,6 +15,7 @@ def test_top5_1UserNItem():
     assert all(isinstance(item, tuple) and len(item) == 2 and isinstance(item[0], int) and isinstance(item[1], int) for item in result)
     assert all(1 <= item[1] <= 5 for item in result)
 
+
 @pytest.fixture
 def api_url():
     return "http://localhost:4000"
