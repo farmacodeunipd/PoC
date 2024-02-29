@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y build-essential
 
 # Install Flask, Flask-CORS, pandas, and scikit-surprise
-RUN pip install --no-cache-dir flask flask-cors pandas scikit-surprise pytest
+RUN pip install --no-cache-dir flask flask-cors pandas scikit-surprise pytest requests
 
 # Copy the application code into the container
 COPY . .
