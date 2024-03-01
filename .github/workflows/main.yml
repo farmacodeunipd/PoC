@@ -19,10 +19,20 @@ jobs:
       - name: Fetch Tags
         run: git fetch --tags
 
-      - name: Tag Docker images
+      - name: Get Version
         run: |
-          VERSION=$(git describe --tags --abbrev=0)
-          docker tag poc docker.pkg.github.com/farmacodeunipd/poc/poc:$VERSION
+          if [ -n "$(git tag --contains $GITHUB_SHA)" ]; then
+            VERSION=$(git describe --tags --abbrev=0)
+          else
+            VERSION=$(git describe --always --abbrev=0)
+          fi
+          echo "Version: $VERSION"
+          echo "::set-env name=VERSION::$VERSION"
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Tag Docker images
+        run: docker tag poc docker.pkg.github.com/farmacodeunipd/poc/poc:$VERSION
 
       - name: Log in to GitHub Packages
         run: echo "${{ secrets.PAT }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
