@@ -46,16 +46,16 @@ jobs:
       - name: Log in to GitHub Packages
         run: echo "${{ secrets.PAT }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
 
-      - name: List Docker images
-        run: docker images
+      # - name: List Docker images
+      #   run: docker images
 
-      - name: Tag and Push Docker images
-        run: |
-          IMAGES=("poc_db_1" "poc_python-api_1" "poc_react-app_1" "poc_express_1") # List of image names
-          for IMAGE in "${IMAGES[@]}"; do
-            docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
-            docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
-          done
+      # - name: Tag and Push Docker images
+      #   run: |
+      #     IMAGES=("poc_db_1" "poc_python-api_1" "poc_react-app_1" "poc_express_1") # List of image names
+      #     for IMAGE in "${IMAGES[@]}"; do
+      #       docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
+      #       docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
+      #     done
 
       - name: Set up Docker Compose
         run: docker-compose up -d
@@ -68,6 +68,7 @@ jobs:
         if: ${{ failure() != true }}
         run: |
           docker-compose build
+          docker images
           docker-compose push
 
       - name: Stop and remove Docker containers
