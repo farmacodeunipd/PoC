@@ -16,6 +16,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: Fetch Tags
+        run: git fetch --tags
+
       - name: Tag Docker images
         run: |
           VERSION=$(git describe --tags --abbrev=0)
