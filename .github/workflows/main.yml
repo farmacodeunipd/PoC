@@ -28,17 +28,31 @@ jobs:
           fi
           echo "Version: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
+          # Increment version based on commit messages
+          if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
+            VERSION=$(echo $VERSION | awk -F. '{$1++; print $0}')
+          elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
+            VERSION=$(echo $VERSION | awk -F. '{$2++; print $0}')
+          elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
+            VERSION=$(echo $VERSION | awk -F. '{$3++; print $0}')
+          fi
+          echo "Updated Version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
         env:
           GITHUB_SHA: ${{ github.sha }}
 
-      - name: Tag Docker images
-        run: docker tag poc docker.pkg.github.com/farmacodeunipd/poc/poc:$VERSION
-
-      - name: Tag Docker images
-        run: docker tag poc docker.pkg.github.com/farmacodeunipd/poc/poc:$VERSION
-
       - name: Log in to GitHub Packages
         run: echo "${{ secrets.PAT }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
+
+      - name: Tag and Push Docker images
+        run: |
+          IMAGES=("db" "python-api" "react-app" "express") # List of image names
+          for IMAGE in "${IMAGES[@]}"; do
+            docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
+            docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
+          done
 
       - name: Set up Docker Compose
         run: docker-compose up -d
@@ -63,5 +77,3 @@ jobs:
           release_name: Release $VERSION
           body: |
             Release $VERSION
-
-            - Rilascio versione $VERSION
