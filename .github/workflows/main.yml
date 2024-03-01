@@ -22,7 +22,7 @@ jobs:
           docker tag poc docker.pkg.github.com/farmacodeunipd/poc/poc:$VERSION
 
       - name: Log in to GitHub Packages
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
+        run: echo "${{ secrets.PAT }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
 
       - name: Set up Docker Compose
         run: docker-compose up -d
