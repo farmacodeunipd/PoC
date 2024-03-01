@@ -27,9 +27,12 @@ jobs:
             VERSION=$(git describe --always --abbrev=0)
           fi
           echo "Version: $VERSION"
-          echo "::set-env name=VERSION::$VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
         env:
           GITHUB_SHA: ${{ github.sha }}
+
+      - name: Tag Docker images
+        run: docker tag poc docker.pkg.github.com/farmacodeunipd/poc/poc:$VERSION
 
       - name: Tag Docker images
         run: docker tag poc docker.pkg.github.com/farmacodeunipd/poc/poc:$VERSION
