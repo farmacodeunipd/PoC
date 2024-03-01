@@ -3,22 +3,9 @@ version: "3.8"
 services:
     db:
         image: docker.pkg.github.com/farmacodeunipd/poc/db:latest
-        command: mysqld --default-authentication-plugin=mysql_native_password
-        restart: always
-        environment:
-            #- MYSQL_AUTHENTICATION_PLUGIN=mysql_native_password
-            #- MYSQL_ALLOW_EMPTY_PASSWORD=ok
-            - MYSQL_ROOT_HOST=localhost
-            - MYSQL_HOST=*
-            - MYSQL_ROOT_PASSWORD=password
-            - MYSQL_DATABASE=mydatabase
-            - MYSQL_USER=myuser
-            - MYSQL_PASSWORD=mypassword
-            - MYSQL_TCP_PORT=3306
-        volumes:
-            - "./db:/docker-entrypoint-initdb.d"
-        expose:
-            - 3306
+        build:
+            context: ./db
+            dockerfile: Dockerfile.db  
         ports:
             - "3306:3306"
 
