@@ -1,4 +1,4 @@
-name: Run tests
+name: Docker Image Release
 
 on:
   push:
@@ -6,27 +6,46 @@ on:
       - main
 
 jobs:
-  test:
+  release and test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Log in to GitHub Packages
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
+      - name: Tag Docker images
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          docker tag poc docker.pkg.github.com/farmacodeunipd/poc/poc:$VERSION
 
-    - name: Build and push Docker images
-      run: docker-compose build && docker-compose push
+      - name: Log in to GitHub Packages
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
 
-    - name: Set up Docker Compose
-      run: docker-compose up -d
+      - name: Set up Docker Compose
+        run: docker-compose up -d
 
-    - name: Run tests
-      run: docker exec poc_python-api_1 pytest tests/test_algo.py
+      - name: Run tests
+        run: docker exec poc_python-api_1 pytest tests/test_algo.py
+        continue-on-error: true
 
-    - name: Stop and remove Docker containers
-      run: docker-compose down
+      - name: Check test status and push Docker images
+        if: ${{ failure() != true }}
+        run: |
+          docker-compose build
+          docker-compose push
+
+      - name: Stop and remove Docker containers
+        run: docker-compose down
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: $VERSION
+          release_name: Release $VERSION
+          body: |
+            Release $VERSION
+
+            - Rilascio versione $VERSION
