@@ -9,6 +9,7 @@ def test_top5_1UserNItem():
     user = 120
     n = 5
 
+
     result = model.topN_1UserNItem(user, n)
 
     assert len(result) == n
