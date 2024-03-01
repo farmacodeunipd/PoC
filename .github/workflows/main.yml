@@ -3,7 +3,7 @@ name: Run tests
 on:
   push:
     branches:
-      - main  # Esegui i test solo quando viene eseguito un push sulla branch main
+      - main
 
 jobs:
   test:
@@ -13,17 +13,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Build Docker image
-      run: docker build -t poc .
-
-    - name: Run Docker container
-      run: docker run poc
+    - name: Set up Docker Compose
+      run: docker-compose up -d --build
 
     - name: Run tests
-      run: docker exec poc-python-api-1 pytest tests/test_algo.py
+      run: docker-compose exec poc-python-api-1 pytest tests/test_algo.py
 
     - name: Stop and remove Docker containers
-      run: docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
+      run: docker-compose down
