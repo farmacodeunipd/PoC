@@ -60,8 +60,13 @@ jobs:
           docker-compose build
           IMAGES=("db" "python-api" "react-app" "express") # List of image names
           for IMAGE in "${IMAGES[@]}"; do
+            # Tag e push con la versione aggiornata
             docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:${{ steps.versioning.outputs.updated_version }}
             docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:${{ steps.versioning.outputs.updated_version }}
+            
+            # Tag e push con il tag "latest"
+            docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:latest
+            docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:latest
           done
 
       - name: Stop and remove Docker containers
