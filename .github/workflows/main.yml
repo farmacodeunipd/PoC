@@ -1,4 +1,5 @@
 name: Docker Image Release
+# ricorda di pushare il tag
 
 on:
   push:
