@@ -28,7 +28,6 @@ jobs:
             UPDATED_VERSION="v0.0.0"
           else
             IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
-
             if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
               ((VERSION_PARTS[0]++))
               VERSION_PARTS[1]=0
@@ -39,7 +38,6 @@ jobs:
             elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
               ((VERSION_PARTS[2]++))
             fi
-
             UPDATED_VERSION=$(printf "v%d.%d.%d" "${VERSION_PARTS[@]}")
           fi
           echo "Updated Version: $UPDATED_VERSION"
