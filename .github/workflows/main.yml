@@ -63,7 +63,7 @@ jobs:
         run: echo "${{ secrets.PAT }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
 
       - name: Checkout
-        run: ls
+        run: ls -la
 
       - name: Set up Docker Compose
         run: docker-compose up -d
