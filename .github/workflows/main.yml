@@ -79,3 +79,6 @@ jobs:
           release_name: Release ${{ steps.versioning.outputs.updated_version }}
           body: |
             Release ${{ steps.versioning.outputs.updated_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        
