@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test-and-release:
+  release-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,27 +22,24 @@ jobs:
       - name: Get Version
         id: versioning
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 --always)
-          if [ "$LAST_TAG" == "fatal: No names found, cannot describe anything." ]; then
-            # If no tags are found, default to starting version v0.0.0
-            UPDATED_VERSION="v0.0.0"
-          else
-            IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
-            if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
-              ((VERSION_PARTS[0]++))
-              VERSION_PARTS[1]=0
-              VERSION_PARTS[2]=0
-            elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
-              ((VERSION_PARTS[1]++))
-              VERSION_PARTS[2]=0
-            elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
-              ((VERSION_PARTS[2]++))
-            fi
-            UPDATED_VERSION=$(printf "v%d.%d.%d" "${VERSION_PARTS[@]}")
+          LAST_TAG=$(git describe --tags --abbrev=0)
+          IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
+
+          if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
+            ((VERSION_PARTS[0]++))
+            VERSION_PARTS[1]=0
+            VERSION_PARTS[2]=0
+          elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
+            ((VERSION_PARTS[1]++))
+            VERSION_PARTS[2]=0
+          elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
+            ((VERSION_PARTS[2]++))
           fi
+
+          UPDATED_VERSION=$(printf "v%d.%d.%d" "${VERSION_PARTS[@]}")
           echo "Updated Version: $UPDATED_VERSION"
           echo "::set-output name=updated_version::$UPDATED_VERSION"
-          
+
         env:
           GITHUB_SHA: ${{ github.sha }}
 
