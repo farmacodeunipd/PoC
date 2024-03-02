@@ -48,6 +48,7 @@ jobs:
 
       - name: Tag and Push Docker images
         run: |
+          docker images
           IMAGES=("db" "python-api" "react-app" "express") # List of image names
           for IMAGE in "${IMAGES[@]}"; do
             docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
