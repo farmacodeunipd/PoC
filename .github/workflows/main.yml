@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-push-images:
+  release-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -43,27 +43,8 @@ jobs:
         env:
           GITHUB_SHA: ${{ github.sha }}
 
-      - name: Build Docker images
-        run: docker-compose build
-
-      - name: Tag and Push Docker images
-        run: |
-          docker images
-          IMAGES=("db" "python-api" "react-app" "express") # List of image names
-          for IMAGE in "${IMAGES[@]}"; do
-            docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
-            docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
-          done
-
-  deployment:
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Log in to GitHub Packages
         run: echo "${{ secrets.PAT }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
-
-      - name: Change to the directory containing docker-compose.yml
-        run: cd poc
 
       - name: Set up Docker Compose
         run: docker-compose up -d
@@ -74,7 +55,14 @@ jobs:
 
       - name: Check test status and push Docker images
         if: ${{ failure() != true }}
-        run: docker-compose push
+        run: |
+          docker-compose build
+          IMAGES=("db" "python-api" "react-app" "express") # List of image names
+          for IMAGE in "${IMAGES[@]}"; do
+            docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
+            docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
+          done
+          docker-compose push
 
       - name: Stop and remove Docker containers
         run: docker-compose down
@@ -82,7 +70,7 @@ jobs:
       - name: Create GitHub Release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
+          tag_name: $VERSION
+          release_name: Release $VERSION
           body: |
-            Release ${{ env.VERSION }}
+            Release $VERSION
