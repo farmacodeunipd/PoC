@@ -62,8 +62,8 @@ jobs:
       - name: Log in to GitHub Packages
         run: echo "${{ secrets.PAT }}" | docker login docker.pkg.github.com -u farmacodeunipd --password-stdin
 
-      - name: Checkout
-        run: ls -la
+      - name: Change to the directory containing docker-compose.yml
+        run: cd poc
 
       - name: Set up Docker Compose
         run: docker-compose up -d
