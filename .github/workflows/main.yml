@@ -47,7 +47,7 @@ jobs:
             ((VERSION_PARTS[2]++))
           fi
 
-          UPDATED_VERSION=$(printf "v%d.%d.%d" "${VERSION_PARTS[@]}")
+          UPDATED_VERSION=$(printf "v%s.%s.%s" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")
           echo "Updated Version: $UPDATED_VERSION"
           echo "::set-output name=updated_version::$UPDATED_VERSION"
 
