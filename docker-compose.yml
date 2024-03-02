@@ -16,6 +16,8 @@ services:
             dockerfile: Dockerfile.client
         ports:
             - "3000:3000"
+        depends_on:
+            - db
 
     python-api:
         image: docker.pkg.github.com/farmacodeunipd/poc/python-api:latest
@@ -24,6 +26,8 @@ services:
             dockerfile: Dockerfile.python
         ports:
             - "4000:4000"
+        depends_on:
+            - db
 
     express:
         image: docker.pkg.github.com/farmacodeunipd/poc/express:latest
@@ -34,19 +38,3 @@ services:
             dockerfile: Dockerfile.express
         ports:
             - "3080:3080"
-
-    # phpmyadmin:
-    #     image: phpmyadmin/phpmyadmin:latest
-
-    #     environment:
-    #         - PMA_HOST=db
-    #         - PMA_PORT=3306
-    #     ports:
-    #         - "8080:80"
-
-    # php-api:
-    #     build:
-    #         context: ./api
-    #         dockerfile: Dockerfile.api
-    #     ports:
-    #         - "8082:80"
