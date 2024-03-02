@@ -58,7 +58,7 @@ jobs:
         if: ${{ failure() != true }}
         run: |
           docker images
-          IMAGES=("poc_db" "poc_python-api" "poc_eact-app" "poc_express") # List of image names
+          IMAGES=("poc_db" "poc_python-api" "poc_react-app" "poc_express") # List of image names
           for IMAGE in "${IMAGES[@]}"; do
             # Tag e push con la versione aggiornata
             docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:${{ steps.versioning.outputs.updated_version }}
