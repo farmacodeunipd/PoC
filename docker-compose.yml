@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
     db:
-        image: docker.pkg.github.com/farmacodeunipd/poc/db:latest
+        # image: docker.pkg.github.com/farmacodeunipd/poc/db:latest
         build:
             context: ./db
             dockerfile: Dockerfile.db  
@@ -10,7 +10,7 @@ services:
             - "3306:3306"
 
     react-app:
-        image: docker.pkg.github.com/farmacodeunipd/poc/react-app:latest
+        # image: docker.pkg.github.com/farmacodeunipd/poc/react-app:latest
         build:
             context: ./client
             dockerfile: Dockerfile.client
@@ -20,7 +20,7 @@ services:
             - db
 
     python-api:
-        image: docker.pkg.github.com/farmacodeunipd/poc/python-api:latest
+        # image: docker.pkg.github.com/farmacodeunipd/poc/python-api:latest
         build:
             context: ./algo
             dockerfile: Dockerfile.python
@@ -30,7 +30,7 @@ services:
             - db
 
     express:
-        image: docker.pkg.github.com/farmacodeunipd/poc/express:latest
+        # image: docker.pkg.github.com/farmacodeunipd/poc/express:latest
         depends_on:
             - db
         build:

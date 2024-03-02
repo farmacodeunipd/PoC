@@ -20,6 +20,7 @@ jobs:
         run: git fetch --tags
 
       - name: Get Version
+        id: versioning
         run: |
           if [ -n "$(git tag --contains $GITHUB_SHA)" ]; then
             VERSION=$(git describe --tags --abbrev=0)
@@ -27,7 +28,7 @@ jobs:
             VERSION=$(git describe --always --abbrev=0)
           fi
           echo "Version: $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "::set-output name=version::$VERSION"
           
           # Increment version based on commit messages
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
@@ -38,7 +39,7 @@ jobs:
             VERSION=$(echo $VERSION | awk -F. '{$3++; print $0}')
           fi
           echo "Updated Version: $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "::set-output name=updated_version::$VERSION"
           
         env:
           GITHUB_SHA: ${{ github.sha }}
@@ -59,10 +60,9 @@ jobs:
           docker-compose build
           IMAGES=("db" "python-api" "react-app" "express") # List of image names
           for IMAGE in "${IMAGES[@]}"; do
-            docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
-            docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:$VERSION
+            docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:${{ steps.versioning.outputs.updated_version }}
+            docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:${{ steps.versioning.outputs.updated_version }}
           done
-          docker-compose push
 
       - name: Stop and remove Docker containers
         run: docker-compose down
@@ -70,7 +70,7 @@ jobs:
       - name: Create GitHub Release
         uses: actions/create-release@v1
         with:
-          tag_name: $VERSION
-          release_name: Release $VERSION
+          tag_name: ${{ steps.versioning.outputs.updated_version }}
+          release_name: Release ${{ steps.versioning.outputs.updated_version }}
           body: |
-            Release $VERSION
+            Release ${{ steps.versioning.outputs.updated_version }}
