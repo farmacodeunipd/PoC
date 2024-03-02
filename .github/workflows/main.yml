@@ -57,7 +57,10 @@ jobs:
       - name: Check test status and push Docker images
         if: ${{ failure() != true }}
         run: |
+          docker images
+          docker rmi -f $(docker images -q)
           docker-compose build
+          docker images
           IMAGES=("db" "python-api" "react-app" "express") # List of image names
           for IMAGE in "${IMAGES[@]}"; do
             # Tag e push con la versione aggiornata
