@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  release-and-test:
+  test-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,25 +22,24 @@ jobs:
       - name: Get Version
         id: versioning
         run: |
-          if [ -n "$(git tag --contains $GITHUB_SHA)" ]; then
-            VERSION=$(git describe --tags --abbrev=0)
-          else
-            VERSION=$(git describe --always --abbrev=0)
-          fi
-          echo "Version: $VERSION"
-          echo "::set-output name=version::$VERSION"
-          
-          # Increment version based on commit messages
+          LAST_TAG=$(git describe --tags --abbrev=0)
+          IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
+
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
-            VERSION=$(echo $VERSION | awk -F. '{$1++; print $0}')
+            ((VERSION_PARTS[0]++))
+            VERSION_PARTS[1]=0
+            VERSION_PARTS[2]=0
           elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
-            VERSION=$(echo $VERSION | awk -F. '{$2++; print $0}')
+            ((VERSION_PARTS[1]++))
+            VERSION_PARTS[2]=0
           elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
-            VERSION=$(echo $VERSION | awk -F. '{$3++; print $0}')
+            ((VERSION_PARTS[2]++))
           fi
-          echo "Updated Version: $VERSION"
-          echo "::set-output name=updated_version::$VERSION"
-          
+
+          UPDATED_VERSION=$(printf "v%d.%d.%d" "${VERSION_PARTS[@]}")
+          echo "Updated Version: $UPDATED_VERSION"
+          echo "::set-output name=updated_version::$UPDATED_VERSION"
+
         env:
           GITHUB_SHA: ${{ github.sha }}
 
@@ -58,13 +57,11 @@ jobs:
         if: ${{ failure() != true }}
         run: |
           docker images
-          IMAGES=("poc_db" "poc_python-api" "poc_react-app" "poc_express") # List of image names
+          IMAGES=("poc_db" "poc_python-api" "poc_react-app" "poc_express")
           for IMAGE in "${IMAGES[@]}"; do
-            # Tag e push con la versione aggiornata
             docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:${{ steps.versioning.outputs.updated_version }}
             docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:${{ steps.versioning.outputs.updated_version }}
             
-            # Tag e push con il tag "latest"
             docker tag $IMAGE docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:latest
             docker push docker.pkg.github.com/farmacodeunipd/poc/$IMAGE:latest
           done
@@ -81,4 +78,3 @@ jobs:
             Release ${{ steps.versioning.outputs.updated_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
-        
