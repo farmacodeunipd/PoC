@@ -43,41 +43,30 @@ jobs:
 
           echo "Last Tag: $LAST_TAG"
 
-          LAST_TAG="${LAST_TAG//v}"
-
-          echo "Last Tag senza v: $LAST_TAG"
-
-          # Separazione delle parti della versione
-          VERSION_PARTS=($(echo "$LAST_TAG" | tr '.' ' '))
-
-          git log --format=%B -n 1 $GITHUB_SHA
-
-          grep_result=$(git log --format=%B -n 1 $GITHUB_SHA | grep "version-major")
-          echo "Grep Result: $grep_result"
-
-          echo "Version Parts before update: ${VERSION_PARTS[*]}"
+          IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
+          MAJOR="${VERSION_PARTS[0]#v}"
+          MID="${VERSION_PARTS[1]}"
+          MINOR="${VERSION_PARTS[2]}"
 
           # Aggiornamento della versione in base al commit
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
             echo "Version Major Detected"
-            echo "primo digit: ${VERSION_PARTS[0]}"
-            ((VERSION_PARTS[0]++))
-            echo "primo digit: ${VERSION_PARTS[0]}"
-            VERSION_PARTS[1]=0
-            VERSION_PARTS[2]=0
-            echo "log 1"
+            ((MAJOR++))
+            MID=0
+            MINOR=0
           elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
             echo "Version Mid Detected"
-            ((VERSION_PARTS[1]++))
-            VERSION_PARTS[2]=0
+            ((MID++))
+            MINOR=0
           elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
             echo "Version Minor Detected"
-            ((VERSION_PARTS[2]++))
+            ((MINOR++))
           fi
 
-          echo "log 2"
+          echo "creating new version ..."
+
           # Costruzione della versione aggiornata
-          UPDATED_VERSION="v$(printf "%s.%s.%s" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")"
+          UPDATED_VERSION="v${MAJOR}.${MID}.${MINOR}"
           echo "Updated Version: $UPDATED_VERSION"
           echo "::set-output name=updated_version::$UPDATED_VERSION"
 
@@ -92,10 +81,9 @@ jobs:
 
       - name: Run tests
         run: docker exec poc_python-api_1 pytest tests/test_algo.py
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Check test status and push Docker images
-        if: ${{ failure() != true }}
         run: |
           docker images
           IMAGES=("poc_db" "poc_python-api" "poc_react-app" "poc_express")
