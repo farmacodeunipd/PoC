@@ -45,7 +45,7 @@ jobs:
           
 
           # Separazione delle parti della versione
-          IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
+          VERSION_PARTS=($(echo "$LAST_TAG" | tr '.' ' '))
 
           git log --format=%B -n 1 $GITHUB_SHA
 
@@ -70,7 +70,7 @@ jobs:
           fi
 
           # Costruzione della versione aggiornata
-          UPDATED_VERSION=$(printf "%s.%s.%s" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")
+          UPDATED_VERSION="v$(printf "%s.%s.%s" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")"
           echo "Updated Version: $UPDATED_VERSION"
           echo "::set-output name=updated_version::$UPDATED_VERSION"
 
