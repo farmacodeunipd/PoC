@@ -51,13 +51,16 @@ jobs:
 
           # Aggiornamento della versione in base al commit
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
+            echo "Version Major Detected"
             ((VERSION_PARTS[0]++))
             VERSION_PARTS[1]=0
             VERSION_PARTS[2]=0
           elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
+            echo "Version Mid Detected"
             ((VERSION_PARTS[1]++))
             VERSION_PARTS[2]=0
           elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
+            echo "Version Minor Detected"
             ((VERSION_PARTS[2]++))
           fi
 
