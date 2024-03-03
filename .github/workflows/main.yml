@@ -41,6 +41,8 @@ jobs:
             git push --tags
           fi
 
+          echo "Last Tag: $LAST_TAG"
+
           # Separazione delle parti della versione
           IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
 
