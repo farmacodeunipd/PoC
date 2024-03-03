@@ -34,22 +34,28 @@ jobs:
             git push --tags
           fi
 
-          IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
+          # Verifica se il tag esiste
+          if git rev-parse -q --verify "refs/tags/$LAST_TAG" >/dev/null; then
+            IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
 
-          if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
-            ((VERSION_PARTS[0]++))
-            VERSION_PARTS[1]=0
-            VERSION_PARTS[2]=0
-          elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
-            ((VERSION_PARTS[1]++))
-            VERSION_PARTS[2]=0
-          elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
-            ((VERSION_PARTS[2]++))
+            if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
+              ((VERSION_PARTS[0]++))
+              VERSION_PARTS[1]=0
+              VERSION_PARTS[2]=0
+            elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
+              ((VERSION_PARTS[1]++))
+              VERSION_PARTS[2]=0
+            elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-minor"; then
+              ((VERSION_PARTS[2]++))
+            fi
+
+            UPDATED_VERSION=$(printf "%s.%s.%s" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")
+            echo "Updated Version: $UPDATED_VERSION"
+            echo "::set-output name=updated_version::$UPDATED_VERSION"
+          else
+            echo "Errore: il tag $LAST_TAG non esiste nel repository."
+            exit 1
           fi
-
-          UPDATED_VERSION=$(printf "%s.%s.%s" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")
-          echo "Updated Version: $UPDATED_VERSION"
-          echo "::set-output name=updated_version::$UPDATED_VERSION"
 
         env:
           GITHUB_SHA: ${{ github.sha }}
