@@ -62,6 +62,7 @@ jobs:
             echo "Version Major Detected"
             echo "primo digit: ${VERSION_PARTS[0]}"
             ((VERSION_PARTS[0]++))
+            echo "primo digit: ${VERSION_PARTS[0]}"
             VERSION_PARTS[1]=0
             VERSION_PARTS[2]=0
             echo "log 1"
