@@ -64,6 +64,7 @@ jobs:
             ((VERSION_PARTS[0]++))
             VERSION_PARTS[1]=0
             VERSION_PARTS[2]=0
+            echo "log 1"
           elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
             echo "Version Mid Detected"
             ((VERSION_PARTS[1]++))
@@ -73,6 +74,7 @@ jobs:
             ((VERSION_PARTS[2]++))
           fi
 
+          echo "log 2"
           # Costruzione della versione aggiornata
           UPDATED_VERSION="v$(printf "%s.%s.%s" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")"
           echo "Updated Version: $UPDATED_VERSION"
