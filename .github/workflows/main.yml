@@ -52,7 +52,7 @@ jobs:
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
             echo "Version Major Detected"
             echo "MAJOR before increment: $MAJOR"
-            ((MAJOR++))
+            let "MAJOR++"
             MID=0
             MINOR=0
           elif git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-mid"; then
