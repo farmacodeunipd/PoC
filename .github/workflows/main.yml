@@ -51,7 +51,7 @@ jobs:
           # Aggiornamento della versione in base al commit
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
             echo "Version Major Detected"
-            echo "MAJOR before increment: $MAJOR"
+            printf "MAJOR before increment: %s\n" "$MAJOR"
             let "MAJOR++"
             echo "MAJOR after increment: $MAJOR"
             MID=0
