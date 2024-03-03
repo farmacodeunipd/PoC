@@ -60,6 +60,7 @@ jobs:
           # Aggiornamento della versione in base al commit
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
             echo "Version Major Detected"
+            echo "primo digit: ${VERSION_PARTS[0]}"
             ((VERSION_PARTS[0]++))
             VERSION_PARTS[1]=0
             VERSION_PARTS[2]=0
