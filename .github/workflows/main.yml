@@ -42,6 +42,7 @@ jobs:
           fi
 
           echo "Last Tag: $LAST_TAG"
+          
 
           # Separazione delle parti della versione
           IFS='.' read -ra VERSION_PARTS <<< "$LAST_TAG"
@@ -50,6 +51,8 @@ jobs:
 
           grep_result=$(git log --format=%B -n 1 $GITHUB_SHA | grep "version-major")
           echo "Grep Result: $grep_result"
+
+          echo "Version Parts before update: ${VERSION_PARTS[*]}"
 
           # Aggiornamento della versione in base al commit
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
