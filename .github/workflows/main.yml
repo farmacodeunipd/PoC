@@ -15,14 +15,14 @@ jobs:
         run: |
           git config --global user.name "farmacodeunipd"
           git config --global user.email "farmacode.swe.unipd@gmail.com"
+
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-
-      - name: Fecth Repo story
-        run: git fetch origin
 
       - name: Fetch Tags
         run: git fetch --tags
