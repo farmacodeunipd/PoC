@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "Git Tags:"
           git tag
-          echo "Last Tag:"
+          echo "Last Tag of tags:"
           git describe --tags --abbrev=0
           echo "Git Log for commit $GITHUB_SHA:"
           git log --format=%B -n 1 $GITHUB_SHA
