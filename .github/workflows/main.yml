@@ -51,6 +51,7 @@ jobs:
           # Aggiornamento della versione in base al commit
           if git log --format=%B -n 1 $GITHUB_SHA | grep -q "version-major"; then
             echo "Version Major Detected"
+            echo "MAJOR before increment: $MAJOR"
             ((MAJOR++))
             MID=0
             MINOR=0
@@ -79,11 +80,11 @@ jobs:
       - name: Set up Docker Compose
         run: docker-compose up -d
 
-      - name: Run tests
+      - name: Run tests and stop if they not pass
         run: docker exec poc_python-api_1 pytest tests/test_algo.py
         continue-on-error: false
 
-      - name: Check test status and push Docker images
+      - name: Push Docker images
         run: |
           docker images
           IMAGES=("poc_db" "poc_python-api" "poc_react-app" "poc_express")
