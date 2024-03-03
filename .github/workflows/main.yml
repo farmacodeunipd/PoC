@@ -42,7 +42,10 @@ jobs:
           fi
 
           echo "Last Tag: $LAST_TAG"
-          
+
+          LAST_TAG="${LAST_TAG//v}"
+
+          echo "Last Tag senza v: $LAST_TAG"
 
           # Separazione delle parti della versione
           VERSION_PARTS=($(echo "$LAST_TAG" | tr '.' ' '))
