@@ -80,7 +80,7 @@ jobs:
         run: docker-compose up -d
 
       - name: Run tests and stop if they not pass
-        run: docker exec poc_python-api_1 pytest algo/tests/test_algo.py --cov=tests --cov-report xml:tests/coverage.xml --verbose
+        run: docker exec poc_python-api_1 pytest tests/test_algo.py --cov=tests --cov-report xml:tests/coverage.xml --verbose
         continue-on-error: false
 
       - name: Upload coverage reports to Codecov
