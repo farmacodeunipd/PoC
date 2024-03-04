@@ -79,8 +79,8 @@ jobs:
       - name: Set up Docker Compose
         run: docker-compose up -d
 
-      - name: Run tests and stop if they not pass
-        run: docker exec -v /algo:/tests poc_python-api_1 pytest tests/test_algo.py --cov=. --cov-report xml:/tests/coverage.xml --verbose
+      - name: Run tests and stop if they do not pass
+        run: docker exec poc_python-api_1 pytest tests/test_algo.py --cov=. --cov-report=html:coverage_report --verbose
         continue-on-error: false
 
       - name: Upload coverage reports to Codecov
@@ -88,7 +88,9 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: farmacodeunipd/poc
-          file: /algo/tests/coverage.xml
+          flags: unittests
+          fail_ci_if_error: true
+          files: ./coverage_report
 
       - name: Push Docker images
         run: |
