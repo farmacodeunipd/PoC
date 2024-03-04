@@ -86,6 +86,9 @@ jobs:
       - name: Copy coverage report from Docker container to GitHub Actions workspace
         run: docker cp poc_python-api_1:/tests/coverage_report $GITHUB_WORKSPACE
 
+      - name: List files in GitHub Actions workspace
+        run: ls -R $GITHUB_WORKSPACE
+
       - name: Archive coverage report
         uses: actions/upload-artifact@v2
         with:
