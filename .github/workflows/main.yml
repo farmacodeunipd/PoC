@@ -80,29 +80,16 @@ jobs:
         run: docker-compose up -d
 
       - name: Run tests and stop if they do not pass
-        run: docker exec poc_python-api_1 pytest tests/test_algo.py --cov=. --cov-report=html:/tests/coverage_report --verbose
+        run: |
+          ci_env=$(bash <(curl -s https://codecov.io/env))
+          docker exec $ci_env poc_python-api_1 pytest tests/test_algo.py --cov=. --verbose
         continue-on-error: false
-
-      - name: Copy coverage report from Docker container to GitHub Actions workspace
-        run: docker cp poc_python-api_1:/tests/coverage_report $GITHUB_WORKSPACE
-
-      - name: List files in GitHub Actions workspace
-        run: ls -R $GITHUB_WORKSPACE
-
-      - name: Archive coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: $GITHUB_WORKSPACE/coverage_report
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: farmacodeunipd/poc
-          flags: unittests
-          fail_ci_if_error: true
-          files: ./coverage_report
 
       - name: Push Docker images
         run: |
