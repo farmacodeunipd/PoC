@@ -3,7 +3,7 @@
 ## Releases and tests
 
 Latest release: ![GitHub Release](https://img.shields.io/github/v/release/farmacodeunipd/poc).\
-Code coverage: ![Codecov](https://img.shields.io/codecov/c/github/farmacodeunipd/poc).
+Code coverage: [![codecov](https://codecov.io/gh/farmacodeunipd/poc/graph/badge.svg?token=BECENNCPRE)](https://codecov.io/gh/farmacodeunipd/poc).
 
 ## Come usare il PoC
 
