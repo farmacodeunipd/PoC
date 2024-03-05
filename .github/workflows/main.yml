@@ -82,14 +82,19 @@ jobs:
       - name: Run tests and stop if they do not pass
         run: |
           ci_env=$(bash <(curl -s https://codecov.io/env))
-          docker exec $ci_env poc_python-api_1 pytest tests/test_algo.py --cov=. --verbose
+          docker exec $ci_env poc_python-api_1 pytest tests/test_algo.py --cov=. --cov-report=xml:/tests/coverage.xml --verbose
         continue-on-error: false
+
+      - name: Copy coverage reports out of the Docker container
+        run: docker cp poc_python-api_1:/tests/coverage.xml .
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: farmacodeunipd/poc
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-merge
 
       - name: Push Docker images
         run: |
