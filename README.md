@@ -5,6 +5,13 @@
 Latest release: ![GitHub Release](https://img.shields.io/github/v/release/farmacodeunipd/poc).\
 Code coverage: [![codecov](https://codecov.io/gh/farmacodeunipd/poc/graph/badge.svg?token=BECENNCPRE)](https://codecov.io/gh/farmacodeunipd/poc).
 
+## Sunburst graph (codecov)
+
+![Coverage grah](https://codecov.io/gh/farmacodeunipd/poc/graphs/sunburst.svg?token=BECENNCPRE)
+
+Il cechio centrale rappresenta il progetto nella sua totalità, spostandosi verso l'esterno ci sono le directory, e infine, i sinfoli file. La grandezza e il colore di ogni "slice" (o spicchio) rappresenta rispettivamente il numero di statements e il coverage.
+
+
 ## Come usare il PoC
 
 ### Download Docker
