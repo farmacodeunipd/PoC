@@ -83,11 +83,11 @@ jobs:
         run: |
           ci_env=$(bash <(curl -s https://codecov.io/env))
           docker exec $ci_env poc_python-api_1 pytest tests/test_algo.py --cov=. --cov-report=xml:/tests/coverage.xml --verbose
-          docker exec $ci_env poc_react-app_1 npm test -- --watchAll=false
+          docker exec $ci_env poc_react-app_1 npm test -- --coverage
         continue-on-error: false
 
-      - name: Convert React coverage report to Cobertura format
-        run: npx jest-coverage-report-converter ./coverage-react.json
+      - name: Copy React coverage report
+        run: docker cp poc_react-app_1:/client/coverage/coverage-final.json ./coverage-react.json
 
       - name: Merge coverage reports
         run: |
