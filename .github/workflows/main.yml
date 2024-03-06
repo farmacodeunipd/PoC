@@ -86,14 +86,16 @@ jobs:
           docker exec $ci_env poc_react-app_1 npm test
         continue-on-error: false
 
-      - name: Copy React coverage report
-        run: docker cp poc_react-app_1:/client/coverage/coverage-final.json ./coverage-react.json
+      - name: Copy coverage reports
+        run: |
+        docker cp poc_python-api_1:/algo/tests/coverage.xml ./coverage-python-api.xml
+        docker cp poc_react-app_1:/client/coverage/coverage-final.json ./coverage-react.json
 
       - name: Merge coverage reports
         run: |
-          mv ./coverage-react.json ./coverage.json
-          mv ./coverage.xml ./python-coverage.xml
-          docker run -v $PWD:/workspace --workdir /workspace alpine:3.14 sh -c "apk add --no-cache python3; python3 -m pip install coverage; coverage combine --append --rcfile=.coveragerc python-coverage.xml coverage.json"
+          mv ./coverage-react.json ./react-coverage.json
+          mv ./coverage-python-api.xml ./python-coverage.xml
+          docker run -v $PWD:/workspace --workdir /workspace alpine:3.14 sh -c "apk add --no-cache python3; python3 -m pip install coverage; coverage combine --append --rcfile=.coveragerc python-coverage.xml react-coverage.json"
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
