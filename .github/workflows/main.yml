@@ -93,9 +93,9 @@ jobs:
 
       - name: Merge coverage reports
         run: |
-          mv ./coverage-react.json ./react-coverage.json
-          mv ./coverage-python-api.xml ./python-coverage.xml
-          docker run -v $PWD:/workspace --workdir /workspace alpine:3.14 sh -c "apk add --no-cache python3; python3 -m pip install coverage; coverage combine --append --rcfile=.coveragerc python-coverage.xml react-coverage.json"
+          apk add --no-cache python3 py3-pip
+          pip3 install coverage
+          coverage combine --append --rcfile=.coveragerc coverage-python-api.xml coverage-react.json
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
