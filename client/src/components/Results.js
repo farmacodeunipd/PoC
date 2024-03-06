@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { StarIcon } from "@heroicons/react/20/solid";
 
+const expressUrl = process.env.EXPRESS_API_URL || 'localhost:3080';
+
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
 async function getUser(id) {
-    const response = await axios.get(`http://localhost:3080/users/${id}`);
+    const response = await axios.get(`http://${expressUrl}/users/${id}`);
     return response.data[0].rag_soc;
 }
 
 async function getItem(id) {
-    const response = await axios.get(`http://localhost:3080/items/${id}`);
+    const response = await axios.get(`http://${expressUrl}/items/${id}`);
     return response.data[0].des_art;
 }
 

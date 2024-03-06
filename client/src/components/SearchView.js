@@ -4,6 +4,9 @@ import axios from "axios";
 import NoResults from "./NoResults";
 import Results from "./Results";
 
+const expressUrl = process.env.EXPRESS_API_URL || 'localhost:3080';
+const algoUrl = process.env.ALGO_API_URL || 'localhost:4000';
+
 function SearchView() {
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -17,7 +20,7 @@ function SearchView() {
     async function fetchResults(object, id, n) {
         setLoading(true);
         const response = await axios.get(
-            `http://localhost:4000/search/${object}/${id}/${n}`
+            `http://${algoUrl}/search/${object}/${id}/${n}`
         );
         console.log("Risposta:", response.data);
         setResults(response.data);
@@ -30,7 +33,7 @@ function SearchView() {
     }, []);
 
     async function getUsers() {
-        const response = await axios.get("http://localhost:3080/users");
+        const response = await axios.get(`http://${expressUrl}/users`);
         setUsers(response.data);
     }
 
@@ -40,7 +43,7 @@ function SearchView() {
     }, []);
 
     async function getItems() {
-        const response = await axios.get("http://localhost:3080/items");
+        const response = await axios.get(`http://${expressUrl}/items`);
         setItems(response.data);
     }
 

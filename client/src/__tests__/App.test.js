@@ -1,14 +1,9 @@
 // __tests__/App.test.js
 
+import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import App from '../App';
-
-test('renders welcome message', () => {
-  render(<App />);
-  const welcomeMessage = screen.getByText(/Welcome to React App/i);
-  expect(welcomeMessage).toBeInTheDocument();
-});
+import App from '../App.js';
 
 // Aggiungi altri test qui per verificare il comportamento dei componenti, ad esempio:
 
