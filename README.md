@@ -3,7 +3,9 @@
 ## Releases and tests
 
 Latest release: ![GitHub Release](https://img.shields.io/github/v/release/farmacodeunipd/poc).\
-Code coverage: [![codecov](https://codecov.io/gh/farmacodeunipd/poc/graph/badge.svg?token=BECENNCPRE)](https://codecov.io/gh/farmacodeunipd/poc).
+Code coverage: [![codecov](https://codecov.io/gh/farmacodeunipd/poc/graph/badge.svg?token=BECENNCPRE)](https://codecov.io/gh/farmacodeunipd/poc)
+
+[Codecov page](https://app.codecov.io/gh/farmacodeunipd/poc?search=&displayType=tree)
 
 ## Sunburst graph (codecov)
 

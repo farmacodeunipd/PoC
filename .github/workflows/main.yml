@@ -82,14 +82,24 @@ jobs:
       - name: Run tests and stop if they do not pass
         run: |
           ci_env=$(bash <(curl -s https://codecov.io/env))
+          docker exec $ci_env poc_db_1 pytest tests/test_db.py --cov=. --cov-report=xml:/tests/coverage.xml --verbose
           docker exec $ci_env poc_python-api_1 pytest tests/test_algo.py --cov=. --cov-report=xml:/tests/coverage.xml --verbose
           docker exec $ci_env poc_react-app_1 npm test
         continue-on-error: false
 
       - name: Copy coverage reports
         run: |
+          docker cp poc_db_1:/tests/coverage.xml ./coverage-db.xml
           docker cp poc_python-api_1:/tests/coverage.xml ./coverage-python-api.xml
           docker cp poc_react-app_1:/client/coverage/coverage-final.json ./coverage-react.json
+
+      - name: Upload Db coverage report to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage-db.xml
+          flags: db
+          name: codecov-db
 
       - name: Upload Python API coverage report to Codecov
         uses: codecov/codecov-action@v4.0.1
