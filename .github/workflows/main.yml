@@ -88,8 +88,8 @@ jobs:
 
       - name: Copy coverage reports
         run: |
-        docker cp poc_python-api_1:/algo/tests/coverage.xml ./coverage-python-api.xml
-        docker cp poc_react-app_1:/client/coverage/coverage-final.json ./coverage-react.json
+          docker cp poc_python-api_1:/algo/tests/coverage.xml ./coverage-python-api.xml
+          docker cp poc_react-app_1:/client/coverage/coverage-final.json ./coverage-react.json
 
       - name: Merge coverage reports
         run: |
