@@ -93,7 +93,8 @@ jobs:
 
       - name: Merge coverage reports
         run: |
-          apk add --no-cache python3 py3-pip
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
           pip3 install coverage
           coverage combine --append --rcfile=.coveragerc coverage-python-api.xml coverage-react.json
 
