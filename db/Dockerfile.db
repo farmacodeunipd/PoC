@@ -13,12 +13,6 @@ ENV MYSQL_USER=myuser
 ENV MYSQL_PASSWORD=mypassword
 ENV MYSQL_TCP_PORT=3306
 
-# Install testing dependencies
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    && pip3 install --no-cache-dir mysql-connector-python pytest
-
 # Copy the SQL initialization script into the Docker image
 COPY ./db.sql /docker-entrypoint-initdb.d/db.sql
 
