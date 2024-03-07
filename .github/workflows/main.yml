@@ -84,7 +84,7 @@ jobs:
           ci_env=$(bash <(curl -s https://codecov.io/env))
           docker exec $ci_env poc_python-api_1 pytest tests/test_algo.py --cov=. --cov-report=xml:/tests/coverage.xml --verbose
           docker exec $ci_env poc_react-app_1 npm test
-          docekr exec $ci_env poc_express_1 npm test
+          docker exec $ci_env poc_express_1 npm test
         continue-on-error: false
 
       - name: Copy coverage reports
