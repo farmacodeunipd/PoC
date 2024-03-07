@@ -132,7 +132,20 @@ jobs:
       - name: Stop and remove Docker containers
         run: docker-compose down
 
+      - name: Check if release already exists
+        id: check_release
+        run: |
+          VERSION="${{ steps.versioning.outputs.updated_version }}"
+          if curl -s -o /dev/null -I -w "%{http_code}" https://api.github.com/repos/farmacodeunipd/poc/releases/tags/${VERSION}; then
+            echo "Release already exists for version ${VERSION}"
+            echo "::set-output name=release_exists::true"
+          else
+            echo "Release does not exist for version ${VERSION}"
+            echo "::set-output name=release_exists::false"
+          fi
+
       - name: Create GitHub Release
+        if: steps.check_release.outputs.release_exists != 'true'
         uses: actions/create-release@v1
         with:
           tag_name: ${{ steps.versioning.outputs.updated_version }}
