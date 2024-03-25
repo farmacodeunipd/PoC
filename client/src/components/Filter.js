@@ -167,6 +167,7 @@ Filter.propTypes = {
     users: PropTypes.array.isRequired,
     items: PropTypes.array.isRequired,
     onObjectChange: PropTypes.func.isRequired,
+    placeholder: PropTypes.string.isRequired,
 };
 
 export default Filter;
