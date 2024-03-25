@@ -3,7 +3,7 @@ name: Python and React/JS application
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   build:
