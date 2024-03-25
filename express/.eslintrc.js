@@ -1,32 +1,35 @@
 module.exports = {
     "env": {
-        "browser": true,
-        "es2021": true
+      "browser": true,
+      "node": true, // Include Node.js environment
+      "es2021": true,
+      "jest": true, // Include Jest environment
+      "mocha": true // Include Mocha environment
     },
     "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
+      "eslint:recommended",
+      "plugin:react/recommended"
     ],
     "overrides": [
-        {
-            "env": {
-                "node": true
-            },
-            "files": [
-                ".eslintrc.{js,cjs}"
-            ],
-            "parserOptions": {
-                "sourceType": "script"
-            }
+      {
+        "files": [
+          "**/__tests__/*.{js,jsx}" // Override settings for test files
+        ],
+        "env": {
+          "jest": true,
+          "mocha": true
         }
+      }
     ],
     "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
+      "ecmaVersion": "latest",
+      "sourceType": "module"
     },
     "plugins": [
-        "react"
+      "react"
     ],
     "rules": {
+      // Define any custom rules or override existing rules here
     }
-}
+  }
+  
