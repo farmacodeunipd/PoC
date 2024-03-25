@@ -1,17 +1,24 @@
-import React from "react";
-import Header from "./components/Header";
-import SearchView from "./components/SearchView";
-import Footer from "./components/Footer";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Ricerca from "./pages/ricerca";
+import Login from "./pages/login";
+import Profilo from "./pages/profilo";
+import Clienti from "./pages/clienti";
+import Prodotti from "./pages/prodotti";
+import PaginaNonTrovata from "./pages/paginaNonTrovata";
 
 function App() {
     return (
-        <>
-            <div className="p-4 bg-white dark:bg-gray-950 h-screen space-y-4 flex flex-col">
-                <Header></Header>
-                <SearchView></SearchView>
-                <Footer></Footer>
-            </div>
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route index element={<Ricerca />} />
+                <Route path="/ricerca" element={<Ricerca />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/profilo" element={<Profilo />} />
+                <Route path="/clienti" element={<Clienti />} />
+                <Route path="/prodotti" element={<Prodotti />} />
+                <Route path="*" element={<PaginaNonTrovata />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 

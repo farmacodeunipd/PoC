@@ -5,6 +5,18 @@ DROP TABLE IF EXISTS settori_comm;
 DROP TABLE IF EXISTS linee_comm;
 DROP TABLE IF EXISTS anacli;
 DROP TABLE IF EXISTS prov;
+DROP TABLE IF EXISTS ute;
+
+CREATE TABLE ute(
+    nom_ute varchar(64) NOT NULL,
+    cog_ute varchar(64) NOT NULL,
+    dat_ute date NOT NULL,
+    mai_ute varchar(64) NOT NULL UNIQUE,
+    use_ute varchar(64),
+    pas_ute varchar(64) NOT NULL,
+    amm_ute boolean DEFAULT FALSE,
+    PRIMARY KEY(use_ute)
+);
 
 CREATE TABLE prov(
     cod_prov varchar(2),
@@ -57,6 +69,10 @@ CREATE TABLE anaart(
     FOREIGN KEY(cod_fam_comm) REFERENCES famiglie_comm(cod_fam_comm) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY(cod_sott_comm) REFERENCES sottofamiglie_comm(cod_sott_comm) ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+INSERT INTO ute VALUES 
+("Mario", "Rossi", "1994-09-10", "mario.rossi@ergon.it", "a", "$2a$10$LDpvuJQOfj9b1.fvjeW5Bu/C7BJlGMCtEh0j4o2N62Za.4Uz/0h72", TRUE),
+("Luca", "Verdi", "1994-09-10", "luca.verdi@ergon.it", "b", "$2a$10$qL79rWWWfjcVXy05h7RV/eOSa1dCVddv4vfK3hV/Dd58G1xMl199G", FALSE);
 
 INSERT INTO prov VALUES
 (".", "ESTERO"),
